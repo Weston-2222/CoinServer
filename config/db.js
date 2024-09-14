@@ -1,14 +1,14 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const dialectOptions =
-  process.env.NODE_ENV === 'production'
-    ? {
-        socketPath: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
-      }
-    : {};
-// 從環境變量中獲取數據庫配置
-const { DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT } = process.env;
+const {
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
+  DB_HOST,
+  DB_PORT,
+  CLOUD_SQL_CONNECTION_NAME,
+} = process.env;
 
 // 創建 Sequelize 實例
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
@@ -22,7 +22,9 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     acquire: 30000,
     idle: 10000,
   },
-  dialectOptions,
+  dialectOptions: {
+    socketPath: `/cloudsql/${CLOUD_SQL_CONNECTION_NAME}`,
+  },
 });
 
 // 測試數據庫連接
