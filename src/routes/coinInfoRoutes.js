@@ -7,7 +7,7 @@ router.use((req, res, next) => {
 });
 router.get('/', async (req, res) => {
   try {
-    const data = await CoinInfo.find();
+    const data = await CoinInfo.findAll();
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
