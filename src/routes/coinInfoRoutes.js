@@ -5,7 +5,7 @@ router.use((req, res, next) => {
   console.log('coinInfo route正在接受一個request...');
   next();
 });
-router.get('/', async (req, res) => {
+router.get('/coininfo', async (req, res) => {
   try {
     const data = await CoinInfo.findAll();
     res.json(data);

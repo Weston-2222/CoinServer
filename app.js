@@ -7,7 +7,7 @@ const { testConnection } = require('./config/db');
 app.use(express.json());
 
 // 路由
-app.use('/api/coinInfo', coinInfoRoutes);
+app.use('/api', coinInfoRoutes);
 
 // 啟動服務器
 const port = process.env.PORT || 8080;
