@@ -16,9 +16,7 @@ if (NODE_ENV === 'production') {
   nodeEnv = {
     dialect: 'postgres',
     logging: false,
-    dialectOptions: {
-      socketPath: `/cloudsql/${CLOUD_SQL_CONNECTION_NAME}`,
-    },
+    host: `/cloudsql/${CLOUD_SQL_CONNECTION_NAME}`,
   };
 }
 if (NODE_ENV === 'development') {
