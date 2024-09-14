@@ -4,7 +4,7 @@ require('dotenv').config();
 const dialectOptions =
   process.env.NODE_ENV === 'production'
     ? {
-        host: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
+        socketPath: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
       }
     : {};
 // 從環境變量中獲取數據庫配置
