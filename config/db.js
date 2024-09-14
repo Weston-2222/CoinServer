@@ -5,27 +5,32 @@ const {
   DB_NAME,
   DB_USER,
   DB_PASSWORD,
-  DB_HOST,
+  DB_IP,
   DB_PORT,
   CLOUD_SQL_CONNECTION_NAME,
+  NODE_ENV,
 } = process.env;
 
+let nodeEnv = {};
+if (NODE_ENV === 'production') {
+  nodeEnv = {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+      socketPath: `/cloudsql/${CLOUD_SQL_CONNECTION_NAME}`,
+    },
+  };
+}
+if (NODE_ENV === 'development') {
+  nodeEnv = {
+    dialect: 'postgres',
+    host: DB_IP,
+    port: DB_PORT,
+    logging: false,
+  };
+}
 // 創建 Sequelize 實例
-const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-  host: DB_HOST,
-  port: DB_PORT,
-  dialect: 'postgres',
-  logging: false, // 設置為 true 可以在控制台看到 SQL 查詢
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-  dialectOptions: {
-    socketPath: `/cloudsql/${CLOUD_SQL_CONNECTION_NAME}`,
-  },
-});
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, nodeEnv);
 
 // 測試數據庫連接
 async function testConnection() {
