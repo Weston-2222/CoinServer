@@ -75,4 +75,4 @@ if (require.main === module) {
   coin_info_get_all();
 }
 
-module.exports = { CoinInfo };
+module.exports = CoinInfo;
