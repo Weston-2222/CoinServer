@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const coinInfoRoutes = require('./src/routes/coinInfoRoutes');
-const klineRoutes = require('./src/routes/kline');
+const klineRoutes = require('./src/routes/klineRoutes');
 const cors = require('cors');
 require('dotenv').config();
 const { testConnection } = require('./config/db');
