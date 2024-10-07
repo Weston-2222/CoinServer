@@ -12,8 +12,8 @@ async function findPage(page, pageSize) {
     return {
       total: count,
       totalPages: totalPages,
-      currentPage: page,
-      pageSize: pageSize,
+      currentPage: Number(page),
+      pageSize: Number(pageSize),
       data: rows.map((item) => item.toJSON()),
     };
   } catch (error) {
