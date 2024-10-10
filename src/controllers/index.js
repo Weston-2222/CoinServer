@@ -3,4 +3,5 @@ module.exports = {
   Klines: require('./klinesController'),
   News: require('./newsController'),
   User: require('./userController'),
+  Auth: require('./authController'),
 };
