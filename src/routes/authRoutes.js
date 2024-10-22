@@ -1,17 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Auth = require('../controllers').Auth;
+const { generateAccessToken, generateRefreshToken } = require('../utils/token');
 const passport = require('passport');
+const { is_production } = require('../../config/env');
+const { setJwtToCookie } = require('../utils/token');
+const User = require('../controllers').User;
 
 // //登入
 router.post('/auth/login', async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    const token = await Auth.login(email, password);
-    res.sendFormattedJson(token);
+    const data = await Auth.login(email, password);
+
+    const access_token = generateAccessToken(data);
+    const refresh_token = generateRefreshToken(data);
+    setJwtToCookie('access_token', res, access_token);
+    setJwtToCookie('refresh_token', res, refresh_token);
+    await User.setRefreshTokenToUserDb(data.id, refresh_token);
+    delete data.id;
+    res.sendFormattedJson(data);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ msg: 'Server error' });
   }
 });
@@ -22,7 +31,9 @@ router.get(
   async (req, res) => {
     const access_token = Auth.updateAccessToken(req.user);
 
-    res.sendFormattedJson({ access_token });
+    setJwtToCookie('access_token', res, access_token);
+
+    res.sendFormattedJson();
   }
 );
 //登出
@@ -31,8 +42,10 @@ router.post(
   passport.authenticate('refresh', { session: false }),
   async (req, res) => {
     try {
-      const result = await Auth.logout(req.user.id);
-      res.sendFormattedJson(result);
+      await Auth.logout(req.user.id);
+      res.clearCookie('access_token');
+      res.clearCookie('refresh_token');
+      res.sendFormattedJson();
     } catch (error) {
       res.status(500).json({ message: error.message, data: null });
     }
@@ -47,6 +60,5 @@ router.get(
     res.json({ msg: 'Test successful' });
   }
 );
-// //登出
-// router.post('/user/logout', User.logout);
+
 module.exports = router;
